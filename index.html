@@ -6,42 +6,46 @@
 <title>Comparativo Hotéis 2026</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Arial,sans-serif;font-size:13px;background:#f5f5f5;padding:20px;color:#333}
-  h1{font-size:18px;font-weight:600;margin-bottom:4px;color:#222}
-  .sub{font-size:12px;color:#666;margin-bottom:16px}
+  body{font-family:Arial,sans-serif;font-size:13px;background:#f5f5f5;padding:12px;color:#333}
+  h1{font-size:17px;font-weight:600;margin-bottom:4px;color:#222}
+  .sub{font-size:11px;color:#666;margin-bottom:12px}
   .wrap{overflow-x:auto;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,0.1)}
-  table{width:100%;border-collapse:collapse;background:#fff;min-width:1100px}
+  table{width:100%;border-collapse:collapse;background:#fff;min-width:700px}
   thead tr{background:#2c3e50;color:#fff}
-  th{padding:10px 12px;text-align:left;font-size:12px;font-weight:600;white-space:nowrap;user-select:none}
+  th{padding:8px 8px;text-align:left;font-size:11px;font-weight:600;white-space:nowrap;user-select:none}
   th.sortable{cursor:pointer}
   th.sortable:hover{background:#3d5166}
-  th .arrow{margin-left:4px;opacity:0.5;font-size:10px}
+  th .arrow{margin-left:3px;opacity:0.5;font-size:9px}
   th.asc .arrow::after{content:'▲'}
   th.desc .arrow::after{content:'▼'}
   th:not(.asc):not(.desc) .arrow::after{content:'⇅'}
-  td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:middle}
+  td{padding:7px 8px;border-bottom:1px solid #eee;vertical-align:middle;font-size:12px}
   tr:last-child td{border-bottom:none}
   tr:hover td{background:#f9f9f9}
   a{color:#2980b9;text-decoration:none}
   a:hover{text-decoration:underline}
-  .stars{color:#e6a817;letter-spacing:1px;font-size:12px}
   .rating-wrap{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px}
-  .rating-top{display:flex;align-items:center;gap:6px}
-  .rating-label{font-size:12px;font-weight:600;color:#333}
-  .rnum{font-size:13px;color:#fff;background:#003580;padding:3px 7px;border-radius:6px;font-weight:700;white-space:nowrap}
+  .rating-top{display:flex;align-items:center;gap:4px}
+  .rating-label{font-size:11px;font-weight:600;color:#333}
+  .rnum{font-size:12px;color:#fff;background:#003580;padding:2px 5px;border-radius:5px;font-weight:700;white-space:nowrap}
   .rating-comments{font-size:10px;color:#999;margin-top:1px}
-  .tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-left:4px;vertical-align:middle}
+  .tag{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:600;margin-left:3px;vertical-align:middle}
   .es{background:#fef3cd;color:#856404}
   .pt{background:#d1e7dd;color:#0f5132}
-  .btn{display:inline-block;padding:3px 10px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap}
+  .btn{display:inline-block;padding:3px 7px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap}
   .btn-book{background:#003580;color:#fff}
   .btn-book:hover{background:#00264d;text-decoration:none}
   .btn-ricky{background:#e8470a;color:#fff}
   .btn-ricky:hover{background:#c23d09;text-decoration:none}
   .price{font-weight:600;color:#1a7a1a;white-space:nowrap}
   .nodispo{color:#aaa;font-style:italic;font-size:11px}
-  .dist-sub{display:block;font-size:11px;color:#999;margin-top:1px}
-  .legend{font-size:11px;color:#999;margin-top:10px}
+  .dist-sub{display:block;font-size:10px;color:#999;margin-top:1px}
+  .legend{font-size:11px;color:#999;margin-top:8px}
+  @media(max-width:600px){
+    body{padding:8px}
+    h1{font-size:15px}
+    .col-site{display:none}
+  }
 </style>
 </head>
 <body>
@@ -53,12 +57,11 @@
 <tr>
   <th>Hotel</th>
   <th>Local</th>
-  <th class="sortable" data-col="dist">Distância de Faro<span class="arrow"></span></th>
+  <th class="sortable" data-col="dist">Faro<span class="arrow"></span></th>
   <th class="sortable" data-col="aval">Avaliação<span class="arrow"></span></th>
-  <th class="sortable" data-col="preco">Preço RickyTravel<span class="arrow"></span></th>
-  <th class="sortable" data-col="precoSite">Preço Site Oficial<span class="arrow"></span></th>
-  <th>Booking</th>
-  <th>RickyTravel</th>
+  <th class="sortable" data-col="preco">Ricky €<span class="arrow"></span></th>
+  <th class="sortable col-site" data-col="precoSite">Site Oficial €<span class="arrow"></span></th>
+  <th>Links</th>
 </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -112,9 +115,8 @@ function render(data){
       <td>~${h.dist} km<span class="dist-sub">≈ ${h.tempo}</span></td>
       <td><div class="rating-wrap"><div class="rating-top"><span class="rating-label">${avalLabel(h.aval)}</span><span class="rnum">${h.aval}</span></div>${h.comentarios?'<span class="rating-comments">'+h.comentarios.toLocaleString('pt-PT')+' comentários</span>':''}</div></td>
       <td>${h.preco?'<span class="price">'+h.preco.toLocaleString('pt-PT')+'€</span>':'<span class="nodispo">—</span>'}</td>
-      <td>${h.precoSite?'<span class="price">'+h.precoSite.toLocaleString('pt-PT')+'€</span>':'<span class="nodispo">—</span>'}</td>
-      <td><a class="btn btn-book" href="${h.booking}" target="_blank">Booking</a></td>
-      <td><a class="btn btn-ricky" href="${h.ricky}" target="_blank">RickyTravel</a></td>
+      <td class="col-site">${h.precoSite?'<span class="price">'+h.precoSite.toLocaleString('pt-PT')+'€</span>':'<span class="nodispo">—</span>'}</td>
+      <td style="white-space:nowrap"><a class="btn btn-book" href="${h.booking}" target="_blank">Booking</a> <a class="btn btn-ricky" href="${h.ricky}" target="_blank">Ricky</a></td>
     </tr>`).join('');
 }
 function sort(col){
