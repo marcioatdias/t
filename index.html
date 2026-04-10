@@ -42,7 +42,7 @@
 </head>
 <body>
 <h1>Comparativo de Hotéis — Verão 2026</h1>
-<p class="sub">Check-in 22 ago · Check-out 29 ago · 2 adultos + 1 criança (13 anos) · 1 quarto &nbsp;·&nbsp; Clica nos cabeçalhos para ordenar</p>
+<p class="sub">Check-in 22 ago · Check-out 29 ago · 2 adultos + 1 criança (13 anos) · 1 quarto &nbsp;·&nbsp; Clica nos cabeçalhos para ordenar &nbsp;·&nbsp; <button id="btnHidden" onclick="toggleHidden()" style="font-size:11px;padding:3px 10px;border-radius:5px;border:1px solid #aaa;background:#fff;cursor:pointer;font-weight:600;color:#555">Mostrar descartados</button></p>
 <div class="wrap">
 <table id="tbl">
 <thead>
@@ -83,7 +83,22 @@ const hotels = [
   { hotel:"RR Club Amarilis", site:"https://rrhotels.pt/pt/clubamarilis/", local:"Islantilla", pais:"ES", maps:"https://www.google.com/maps/dir/Faro+Airport/RR+Club+Amarilis,+Islantilla,+Huelva,+Spain", dist:95, tempo:"1h 10 min", aval:3.9, preco:2619, precoSite:2131, booking:"https://www.booking.com/search.pt.html?ss=RR+Club+Amarilis+Islantilla&checkin=2026-08-22&checkout=2026-08-29&group_adults=2&group_children=1&age=13&no_rooms=1", ricky:"https://www.rickytravel.com/pt/hotel/1453893332/Club%20Amarilis/L-0287" }
 ];
 
-let sortCol = null, sortDir = 1;
+let sortCol = null, sortDir = 1, showHidden = false;
+function toggleHidden(){
+  showHidden=!showHidden;
+  document.getElementById('btnHidden').textContent=showHidden?'Ocultar descartados':'Mostrar descartados';
+  document.getElementById('btnHidden').style.color=showHidden?'#c0392b':'#555';
+  redraw();
+}
+function redraw(){
+  const data=hotels.filter(h=>showHidden||!h.hidden).sort((a,b)=>{
+    if(!sortCol)return b.aval-a.aval;
+    let va=a[sortCol],vb=b[sortCol];
+    if(va===null)return 1;if(vb===null)return -1;
+    return(va-vb)*sortDir;
+  });
+  render(data);
+}
 function stars(n){const f=Math.floor(n);return '★'.repeat(f)+(n%1>=0.5?'☆':'');}
 function render(data){
   document.getElementById('tbody').innerHTML=data.map(h=>`
@@ -102,13 +117,12 @@ function sort(col){
   document.querySelectorAll('th.sortable').forEach(t=>t.classList.remove('asc','desc'));
   if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1;}
   document.querySelector('th[data-col="'+col+'"]').classList.add(sortDir===1?'asc':'desc');
-  const s=[...hotels].filter(h=>!h.hidden).sort((a,b)=>{let va=a[col],vb=b[col];if(va===null)return 1;if(vb===null)return -1;return(va-vb)*sortDir;});
-  render(s);
+  redraw();
 }
 document.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>sort(th.dataset.col)));
 sortCol='aval'; sortDir=-1;
 document.querySelector('th[data-col="aval"]').classList.add('desc');
-render([...hotels].filter(h=>!h.hidden).sort((a,b)=>(b.aval-a.aval)));
+redraw();
 </script>
 </body>
 </html>
